@@ -4,28 +4,26 @@ from ray.rllib.algorithms.dqn import DQNConfig
 from ray.rllib.algorithms.algorithm import Algorithm
 import time
 
-# config = (DQNConfig().environment(GymEnvironment)
-#           .rollouts(num_rollout_workers=2, create_env_on_local_worker=True))
-#
-# pretty_print(config.to_dict())
-#
-# algo = config.build()
-#
-# for i in range(10):
-#     result = algo.train()
-#
-# print(pretty_print(result))
+config = (DQNConfig().environment(GymEnvironment)
+          .rollouts(num_rollout_workers=2, create_env_on_local_worker=True))
 
-checkpoint = '/Users/yuxinchen/ray_results/DQN_GymEnvironment_2023-05-04_17-58-55lisvow_q/checkpoint_000010'
-restored_algo = Algorithm.from_checkpoint(checkpoint)
+pretty_print(config.to_dict())
 
+algo = config.build()
+
+for i in range(10):
+    result = algo.train()
+
+print(pretty_print(result))
+
+checkpoint = algo.save()
 print(checkpoint)
 
-evaluation = restored_algo.evaluate()
-
+evaluation = algo.evaluate()
 print(pretty_print(evaluation))
 
-# algo.stop()
+algo.stop()
+restored_algo = Algorithm.from_checkpoint(checkpoint)
 
 algo = restored_algo
 
@@ -38,8 +36,8 @@ while not done:
     action = algo.compute_single_action(observations)
     observations, reward, done, info = env.step(action)
     total_reward += reward
-    time.sleep(0.05)
-    env.render()
+    # time.sleep(0.05)
+    # env.render()
 
 policy = algo.get_policy()
 print(policy.get_weights())
