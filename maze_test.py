@@ -2,25 +2,26 @@ import time
 import numpy as np
 import ray
 
-from policy import Policy
-from simulation import Simulation
+from maze_policy import Policy
+from maze_simulation import Simulation
 from maze_gym_env import Environment
-
+# random sample check environment
 environment = Environment()
 
-# while not environment.is_done():
+### while not environment.is_done():
 #     random_action = environment.action_space.sample()
 #     environment.step(random_action)
 #     time.sleep(0.1)
 #     environment.render()
 
+### untrained policy test simulation
 # untrained_policy = Policy(environment)
 # sim = Simulation(environment)
 #
 # exp = sim.rollout(untrained_policy, render=True, epsilon=1.0)
 # for row in untrained_policy.state_action_table:
 #     print(row)
-
+### Train policy
 def update_policy(policy, experiences, weight=0.1, discount_factor=0.9):
     """Updates a given policy with a list of (state, action, reward, state)
     experiences."""
@@ -58,6 +59,7 @@ def evaluate_policy(env, policy, num_episodes=10):
 # trained_policy = train_policy(environment)
 # evaluate_policy(environment, trained_policy)
 
+### Distributed Ray App
 ray.init()
 
 @ray.remote
